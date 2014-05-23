@@ -142,7 +142,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             5: [],
             6: [],
         }
-        self.assertEqual(box, result)
+        self.assertDictEqual(box, result)
 
     def test_seconds_since_midnight(self):
         """
