@@ -188,12 +188,19 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         """
         Testing calculated avgerage of list.
         """
-        data = [1.6, 2.4, 3.5, 4.0, ]
-        result = utils.mean(data)
-        self.assertEqual(result, 2.875)
-        data = []
-        result = utils.mean(data)
-        self.assertEqual(result, 0)
+        self.assertEqual(utils.mean([
+            1.6,
+            2.4,
+            3.5,
+            4.0,
+            6.9,
+            1.3,
+            7.4,
+            0.6,
+            4.4,
+            7,
+            119, ]), 2.875)
+        self.assertEqual(utils.mean([]), 0)
 
 
 def suite():
