@@ -143,6 +143,18 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             6: [],
         }
         self.assertDictEqual(box, result)
+        result = utils.group_by_weekday(sample_data[11])
+        self.assertIsInstance(result, dict)
+        box = {
+            0: [24123],
+            1: [16564],
+            2: [25321],
+            3: [22969, 22999],
+            4: [6426],
+            5: [],
+            6: [],
+        }
+        self.assertDictEqual(box, result)
 
     def test_seconds_since_midnight(self):
         """
@@ -150,6 +162,10 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         """
         result = utils.seconds_since_midnight(datetime.time(00, 00, 30))
         self.assertEqual(result, 30)
+        result = utils.seconds_since_midnight(datetime.time(00, 10, 30))
+        self.assertEqual(result, 630)
+        result = utils.seconds_since_midnight(datetime.time(10, 10, 30))
+        self.assertEqual(result, 36630)
 
     def test_interval(self):
         """
@@ -159,14 +175,22 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             datetime.time(01, 00, 00), datetime.time(10, 00, 00)
         )
         self.assertEqual(result, 32400)
+        result = utils.interval(
+            datetime.time(01, 00, 00), datetime.time(17, 00, 00)
+        )
+        self.assertEqual(result, 57600)
+        result = utils.interval(
+            datetime.time(01, 05, 00), datetime.time(11, 10, 15)
+        )
+        self.assertEqual(result, 36315)
 
     def test_mean(self):
         """
         Testing calculated avgerage of list.
         """
-        data = [1, 2, 3, 4, ]
+        data = [1.6, 2.4, 3.5, 4.0, ]
         result = utils.mean(data)
-        self.assertEqual(result, 2.5)
+        self.assertEqual(result, 2.875)
         data = []
         result = utils.mean(data)
         self.assertEqual(result, 0)
