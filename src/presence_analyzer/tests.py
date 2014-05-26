@@ -194,27 +194,32 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             2,
             3,
             78,
-            119, ]), 40.6)
+            119,
+        ]), 40.6)
         self.assertAlmostEqual(utils.mean([
             1.5,
             2.2,
             78.31054,
-            19.86465484, ]), 25.4687987)
+            19.86465484,
+        ]), 25.4687987)
         self.assertAlmostEqual(utils.mean([
             74.51,
             0.9243,
             78.64,
-            19.545, ]), 43.404825)
+            19.545,
+        ]), 43.404825)
         self.assertAlmostEqual(utils.mean([
             74.53,
             53.22,
             24.75,
-            19.5345, ]), 43.00862501)
+            19.5345,
+        ]), 43.00862501)
         self.assertEqual(utils.mean([
             54.2,
             234.4,
             59.93,
-            43.4, ]), 97.9825)
+            43.4,
+        ]), 97.9825)
 
 
 def suite():
