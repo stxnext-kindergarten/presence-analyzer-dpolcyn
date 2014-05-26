@@ -53,6 +53,48 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(len(data), 2)
         self.assertDictEqual(data[0], {u'user_id': 10, u'name': u'User 10'})
 
+    def test_mean_time_weekday_view(self):
+        """
+        Checking inversed presence time of given user grouped by weekday.
+        """
+        resp = self.client.get('/api/v1/mean_time_weekday/10')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, 'application/json')
+
+        sample_data = json.loads(resp.data)
+        self.assertEqual(sample_data, [
+            [u'Mon', 0],
+            [u'Tue', 30047.0],
+            [u'Wed', 24465.0],
+            [u'Thu', 23705.0],
+            [u'Fri', 0],
+            [u'Sat', 0],
+            [u'Sun', 0],
+            ]
+        )
+
+    def test_presence_weekday_view(self):
+        """
+        Checking inversed totla presence time of given user grouped by
+        weekaday.
+        """
+        resp = self.client.get('api/v1/presence_weekday/10')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, 'application/json')
+
+        sample_data = json.loads(resp.data)
+        self.assertEqual(sample_data, [
+            [u'Weekday', 'Presence (s)'],
+            [u'Mon', 0],
+            [u'Tue', 30047.0],
+            [u'Wed', 24465.0],
+            [u'Thu', 23705.0],
+            [u'Fri', 0],
+            [u'Sat', 0],
+            [u'Sun', 0],
+            ]
+        )
+
 
 class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
     """
@@ -83,6 +125,101 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         self.assertItemsEqual(data[10][sample_date].keys(), ['start', 'end'])
         self.assertEqual(data[10][sample_date]['start'],
                          datetime.time(9, 39, 5))
+
+    def test_group_by_weekday(self):
+        """
+        Test groups presence entries by weeekday.
+        """
+        sample_data = utils.get_data()
+        result = utils.group_by_weekday(sample_data[10])
+        self.assertIsInstance(result, dict)
+        box = {
+            0: [],
+            1: [30047],
+            2: [24465],
+            3: [23705],
+            4: [],
+            5: [],
+            6: [],
+        }
+        self.assertDictEqual(box, result)
+        result = utils.group_by_weekday(sample_data[11])
+        self.assertIsInstance(result, dict)
+        box = {
+            0: [24123],
+            1: [16564],
+            2: [25321],
+            3: [22969, 22999],
+            4: [6426],
+            5: [],
+            6: [],
+        }
+        self.assertDictEqual(box, result)
+
+    def test_seconds_since_midnight(self):
+        """
+        Testing results of seconds_since_midnight function.
+        """
+        result = utils.seconds_since_midnight(datetime.time(00, 00, 30))
+        self.assertEqual(result, 30)
+        result = utils.seconds_since_midnight(datetime.time(00, 10, 30))
+        self.assertEqual(result, 630)
+        result = utils.seconds_since_midnight(datetime.time(10, 10, 30))
+        self.assertEqual(result, 36630)
+
+    def test_interval(self):
+        """
+        Testing calculated time between end and start.
+        """
+        result = utils.interval(
+            datetime.time(01, 00, 00), datetime.time(10, 00, 00)
+        )
+        self.assertEqual(result, 32400)
+        result = utils.interval(
+            datetime.time(01, 00, 00), datetime.time(17, 00, 00)
+        )
+        self.assertEqual(result, 57600)
+        result = utils.interval(
+            datetime.time(01, 05, 00), datetime.time(11, 10, 15)
+        )
+        self.assertEqual(result, 36315)
+
+    def test_mean(self):
+        """
+        Testing calculated avgerage of list.
+        """
+        self.assertEqual(utils.mean([]), 0)
+        self.assertEqual(utils.mean([
+            1,
+            2,
+            3,
+            78,
+            119,
+        ]), 40.6)
+        self.assertAlmostEqual(utils.mean([
+            1.5,
+            2.2,
+            78.31054,
+            19.86465484,
+        ]), 25.4687987)
+        self.assertAlmostEqual(utils.mean([
+            74.51,
+            0.9243,
+            78.64,
+            19.545,
+        ]), 43.404825)
+        self.assertAlmostEqual(utils.mean([
+            74.53,
+            53.22,
+            24.75,
+            19.5345,
+        ]), 43.00862501)
+        self.assertEqual(utils.mean([
+            54.2,
+            234.4,
+            59.93,
+            43.4,
+        ]), 97.9825)
 
 
 def suite():
