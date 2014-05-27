@@ -95,6 +95,25 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
             ]
         )
 
+    def test_presence_start_end_view(self):
+        """
+        Testing returned avg starts, ends of given user grouped by weekeday.
+        """
+        resp = self.client.get('/api/v1/presence_start_end/10')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, 'application/json')
+
+        sample_data = json.loads(resp.data)
+        self.assertEqual(sample_data, [
+            [u'Mon', 0, 0],
+            [u'Tue', 34745.0, 64792.0],
+            [u'Wed', 33592.0, 58057.0],
+            [u'Thu', 38926.0, 62631.0],
+            [u'Fri', 0, 0],
+            [u'Sat', 0, 0],
+            [u'Sun', 0, 0],
+        ])
+
 
 class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
     """
@@ -220,6 +239,32 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             59.93,
             43.4,
         ]), 97.9825)
+
+    def test_count_avg_group_by_weekday(self):
+        """
+        Testing returned presence starts, ends by weekday.
+        """
+        sample_data = utils.get_data()
+        days = utils.count_avg_group_by_weekday(sample_data[10])
+        self.assertEqual(days, {
+            0: {'start': [], 'end': []},
+            1: {'start': [34745], 'end': [64792]},
+            2: {'start': [33592], 'end': [58057]},
+            3: {'start': [38926], 'end': [62631]},
+            4: {'start': [], 'end': []},
+            5: {'start': [], 'end': []},
+            6: {'start': [], 'end': []},
+        })
+        days = utils.count_avg_group_by_weekday(sample_data[11])
+        self.assertAlmostEqual(days, {
+            0: {'start': [33134], 'end': [57257]},
+            1: {'start': [33590], 'end': [50154]},
+            2: {'start': [33206], 'end': [58527]},
+            3: {'start': [37116, 34088], 'end': [60085, 57087]},
+            4: {'start': [47816], 'end': [54242]},
+            5: {'start': [], 'end': []},
+            6: {'start': [], 'end': []},
+        })
 
 
 def suite():
