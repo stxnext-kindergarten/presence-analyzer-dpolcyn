@@ -245,26 +245,36 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         Testing returned presence starts, ends by weekday.
         """
         sample_data = utils.get_data()
-        days = utils.count_avg_group_by_weekday(sample_data[10])
-        self.assertEqual(days, {
-            0: {'start': [], 'end': []},
-            1: {'start': [34745], 'end': [64792]},
-            2: {'start': [33592], 'end': [58057]},
-            3: {'start': [38926], 'end': [62631]},
-            4: {'start': [], 'end': []},
-            5: {'start': [], 'end': []},
-            6: {'start': [], 'end': []},
-        })
-        days = utils.count_avg_group_by_weekday(sample_data[11])
-        self.assertAlmostEqual(days, {
-            0: {'start': [33134], 'end': [57257]},
-            1: {'start': [33590], 'end': [50154]},
-            2: {'start': [33206], 'end': [58527]},
-            3: {'start': [37116, 34088], 'end': [60085, 57087]},
-            4: {'start': [47816], 'end': [54242]},
-            5: {'start': [], 'end': []},
-            6: {'start': [], 'end': []},
-        })
+        days = utils.count_avg_group_by_weekday(
+            sample_data[10],
+        )
+        self.assertEqual(
+            days,
+            {
+                0: {'start': [], 'end': []},
+                1: {'start': [34745], 'end': [64792]},
+                2: {'start': [33592], 'end': [58057]},
+                3: {'start': [38926], 'end': [62631]},
+                4: {'start': [], 'end': []},
+                5: {'start': [], 'end': []},
+                6: {'start': [], 'end': []},
+            }
+        )
+        days = utils.count_avg_group_by_weekday(
+            sample_data[11],
+        )
+        self.assertAlmostEqual(
+            days,
+            {
+                0: {'start': [33134], 'end': [57257]},
+                1: {'start': [33590], 'end': [50154]},
+                2: {'start': [33206], 'end': [58527]},
+                3: {'start': [37116, 34088], 'end': [60085, 57087]},
+                4: {'start': [47816], 'end': [54242]},
+                5: {'start': [], 'end': []},
+                6: {'start': [], 'end': []},
+            }
+        )
 
 
 def suite():

@@ -89,11 +89,13 @@ def presence_start_end_view(user_id):
         return []
 
     weekdays = count_avg_group_by_weekday(data[user_id])
-
-    result = [(
-        calendar.day_abbr[weekday],
-        mean(intervals['start']),
-        mean(intervals['end']),)
-        for weekday, intervals in weekdays.items()]
+    result = [
+        (
+            calendar.day_abbr[weekday],
+            mean(intervals['start']),
+            mean(intervals['end']),
+        )
+        for weekday, intervals in weekdays.items()
+    ]
 
     return result
