@@ -100,8 +100,10 @@ def presence_start_end_view(user_id):
     ]
     return result
 
+
 @app.route('/templates/<string:template_name>', methods=['GET'])
 def presence_weekday_temp(template_name):
     """
+    Render templates.
     """
     return render_template(template_name + ".html")
