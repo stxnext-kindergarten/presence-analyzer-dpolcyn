@@ -28,7 +28,11 @@
                     (url_for('presence_weekday_temp',
                     template_name='presence_start_end'), 'presence_start_end'),   
                 ] %}
-                <li id="selected"><a href="{{ href }}"> {{caption}} </a></li>
+                <li >
+                {% if caption == true %}
+                    <id="selected">
+                {% endif %}
+                <a href="{{ href }}"> {{caption}} </a></li>
                 {% endfor %}
             </ul>
         </div>
