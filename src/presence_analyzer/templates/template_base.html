@@ -1,3 +1,13 @@
+{%
+    set page_list = [
+            (url_for('presence_weekday_temp', template_name='presence_weekday'), 'presence by weekday'),
+            (url_for('presence_weekday_temp',
+            template_name='mean_time_weekdays'), 'presence mean time'),
+            (url_for('presence_weekday_temp',
+            template_name='presence_start_end'), 'presence start end'),   
+    ]
+%}
+
 <!doctype html>
 <html lang=en>
 <head>
@@ -21,19 +31,21 @@
         <div id="header">
             <h1>Presence analyzer</h1>
             <ul>
-                {% for href, caption in [
-                    (url_for('presence_weekday_temp', template_name='presence_weekday'), 'presence_by_weekday'),
-                    (url_for('presence_weekday_temp',
-                    template_name='mean_time_weekdays'), 'presence_mean_time'),
-                    (url_for('presence_weekday_temp',
-                    template_name='presence_start_end'), 'presence_start_end'),   
-                ] %}
-                <li >
-                {% if caption == true %}
-                    <id="selected">
+                {% if active == 0 %}
+                    <li id="selected"><a href="/templates/presence_weekday">Presence by weekday</a></li>
+                    <li><a href="/templates/mean_time_weekdays">Presence mean time</a></li>
+                    <li><a href="/templates/presence_start_end">Presence start-end</a></li>
                 {% endif %}
-                <a href="{{ href }}"> {{caption}} </a></li>
-                {% endfor %}
+                {% if active == 1 %}
+                    <li><a href="/templates/presence_weekday">Presence by weekday</a></li>
+                    <li id="selected"><a href="/templates/mean_time_weekdays">Presence mean time</a></li>
+                    <li><a href="/templates/presence_start_end">Presence start-end</a></li>
+                {% endif %}
+                {% if active == 2 %}
+                    <li><a href="/templates/presence_weekday">Presence by weekday</a></li>
+                    <li><a href="/templates/mean_time_weekdays">Presence mean time</a></li>
+                    <li id="selected"><a href="/templates/presence_start_end">Presence start-end</a></li>
+                {% endif %}
             </ul>
         </div>
         <div id="content">
