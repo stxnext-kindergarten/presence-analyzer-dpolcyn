@@ -23,7 +23,7 @@
     <script src="{{url_for('static', filename='js/jquery.min.js')}}"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     {% block head %}
-	{% endblock %}
+    {% endblock %}
 </head>
 
 <body>
@@ -31,27 +31,20 @@
         <div id="header">
             <h1>Presence analyzer</h1>
             <ul>
-                {% if active == 0 %}
-                    <li id="selected"><a href="/templates/presence_weekday">Presence by weekday</a></li>
-                    <li><a href="/templates/mean_time_weekdays">Presence mean time</a></li>
-                    <li><a href="/templates/presence_start_end">Presence start-end</a></li>
-                {% endif %}
-                {% if active == 1 %}
-                    <li><a href="/templates/presence_weekday">Presence by weekday</a></li>
-                    <li id="selected"><a href="/templates/mean_time_weekdays">Presence mean time</a></li>
-                    <li><a href="/templates/presence_start_end">Presence start-end</a></li>
-                {% endif %}
-                {% if active == 2 %}
-                    <li><a href="/templates/presence_weekday">Presence by weekday</a></li>
-                    <li><a href="/templates/mean_time_weekdays">Presence mean time</a></li>
-                    <li id="selected"><a href="/templates/presence_start_end">Presence start-end</a></li>
-                {% endif %}
+                {% for href, caption in page_list %}
+                <li
+                    {% if caption == active %}
+                        id="selected"
+                    {% endif %}>
+                    <a href="{{ href }}"> {{caption}} </a>
+                </li>
+                {% endfor %}
             </ul>
         </div>
         <div id="content">
             <h2>
-            	{% block foot %}
-            	{% endblock %}
+                {% block foot %}
+                {% endblock %}
             </h2>
             <p>
                 <select id="user_id" style="display: none">
