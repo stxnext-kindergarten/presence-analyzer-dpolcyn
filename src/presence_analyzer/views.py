@@ -4,7 +4,11 @@ Defines views.
 """
 
 import calendar
-from flask import render_template, redirect, url_for
+from flask import (
+    render_template,
+    redirect,
+    make_response,
+)
 
 from presence_analyzer.main import app
 from presence_analyzer.utils import (
@@ -16,8 +20,8 @@ from presence_analyzer.utils import (
 )
 
 import logging
+import jinja2
 log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
-from jinja2 import Environment, PackageLoader
 
 
 @app.route('/')
@@ -102,8 +106,11 @@ def presence_start_end_view(user_id):
 
 
 @app.route('/templates/<string:template_name>', methods=['GET'])
-def presence_weekday_temp(template_name):
+def templates_renderer(template_name):
     """
     Render templates.
     """
-    return render_template(template_name + ".html")
+    try:
+        return render_template(template_name + ".html")
+    except(jinja2.exceptions.TemplateNotFound):
+        return make_response("page not found", 404)

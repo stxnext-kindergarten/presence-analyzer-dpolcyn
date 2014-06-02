@@ -1,9 +1,9 @@
 {%
     set page_list = [
-            (url_for('presence_weekday_temp', template_name='presence_weekday'), 'presence by weekday'),
-            (url_for('presence_weekday_temp',
+            (url_for('templates_renderer', template_name='presence_weekday'), 'presence by weekday'),
+            (url_for('templates_renderer',
             template_name='mean_time_weekdays'), 'presence mean time'),
-            (url_for('presence_weekday_temp',
+            (url_for('templates_renderer',
             template_name='presence_start_end'), 'presence start end'),   
     ]
 %}
