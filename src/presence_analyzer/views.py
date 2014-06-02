@@ -112,5 +112,5 @@ def templates_renderer(template_name):
     """
     try:
         return render_template(template_name + ".html")
-    except(jinja2.exceptions.TemplateNotFound):
+    except jinja2.exceptions.TemplateNotFound:
         return make_response("page not found", 404)
