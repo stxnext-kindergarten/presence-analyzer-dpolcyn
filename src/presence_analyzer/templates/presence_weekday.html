@@ -7,7 +7,7 @@
 	        (function($) {
 	            $(document).ready(function(){
 	                var loading = $('#loading');
-	                $.getJSON("/api/v1/users", function(result) {
+	                $.getJSON("{{ url_for('users_view') }}", function(result) {
 	                    var dropdown = $("#user_id");
 	                    $.each(result, function(item) {
 	                        dropdown.append($("<option />").val(this.user_id).text(this.name));
@@ -21,7 +21,7 @@
 	                    if(selected_user) {
 	                        loading.show();
 	                        chart_div.hide();
-	                        $.getJSON("/api/v1/presence_weekday/"+selected_user, function(result) {
+	                        $.getJSON("{{ url_for('presence_weekday_view', user_id=0) }}"+selected_user, function(result) {
 	                            var data = google.visualization.arrayToDataTable(result);
 	                            var options = {};
 	                            chart_div.show();
@@ -38,3 +38,5 @@
 {% block foot %}
 Presence by weekday
 {% endblock %}
+
+$.getJSON("{{ url_for('mean_time_weekday_view') }}"
