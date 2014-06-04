@@ -114,6 +114,26 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
             [u'Sun', 0, 0],
         ])
 
+    def test_templates_render(self):
+        """
+        Testing returned templates.
+        """
+        resp = self.client.get('/presence_weekday')
+        self.assertIn('Presence by weekday', resp.data)
+        self.assertEqual(resp.status_code, 200)
+
+        resp = self.client.get('/mean_time_weekdays')
+        self.assertIn('Presence mean time by weekday', resp.data)
+        self.assertEqual(resp.status_code, 200)
+
+        resp = self.client.get('/presence_stat_end')
+        self.assertIn('Presence start end', resp.data)
+        self.assertEqual(resp.status_code, 200)
+
+        resp = self.client.get('/bad_page_name')
+        self.assertIn('page not found', resp.data)
+        self.assertEqual(resp.status_code, 404)
+
 
 class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
     """

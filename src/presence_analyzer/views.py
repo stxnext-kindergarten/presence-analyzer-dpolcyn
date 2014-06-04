@@ -5,10 +5,11 @@ Defines views.
 
 import calendar
 from flask import (
-    render_template,
     redirect,
     make_response,
 )
+from flask.ext.mako import render_template
+from mako.exceptions import TopLevelLookupException
 
 from presence_analyzer.main import app
 from presence_analyzer.utils import (
@@ -20,7 +21,6 @@ from presence_analyzer.utils import (
 )
 
 import logging
-import jinja2
 log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
 
 
@@ -105,12 +105,12 @@ def presence_start_end_view(user_id):
     return result
 
 
-@app.route('/templates/<string:template_name>', methods=['GET'])
+@app.route('/<string:template_name>', methods=['GET'])
 def templates_renderer(template_name):
     """
     Render templates.
     """
     try:
         return render_template(template_name + ".html")
-    except jinja2.exceptions.TemplateNotFound:
+    except TopLevelLookupException:
         return make_response("page not found", 404)
