@@ -8,7 +8,7 @@ from json import dumps
 from functools import wraps
 from datetime import datetime
 
-from flask import Response, url_for
+from flask import Response
 
 from presence_analyzer.main import app
 

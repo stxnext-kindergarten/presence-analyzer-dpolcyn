@@ -1,13 +1,16 @@
-{% extends "template_base.html" %}
-{% set active = 'presence by weekday' %}
-{% block head %}
-	<script type="text/javascript">
+<%!
+	active = 'presence by weekday' 
+%>
+<%inherit file="template_base.html"/>
+<%block name="content" >
+	<head>
+		<script type="text/javascript">
 	        google.load("visualization", "1", {packages:["corechart"], 'language': 'en'});
 
 	        (function($) {
 	            $(document).ready(function(){
 	                var loading = $('#loading');
-	                $.getJSON("{{ url_for('users_view') }}", function(result) {
+	                $.getJSON("${url_for('users_view')}", function(result) {
 	                    var dropdown = $("#user_id");
 	                    $.each(result, function(item) {
 	                        dropdown.append($("<option />").val(this.user_id).text(this.name));
@@ -21,7 +24,7 @@
 	                    if(selected_user) {
 	                        loading.show();
 	                        chart_div.hide();
-	                        $.getJSON("{{ url_for('presence_weekday_view', user_id=0) }}"+selected_user, function(result) {
+	                        $.getJSON("${url_for('presence_weekday_view', user_id=0)}"+selected_user, function(result) {
 	                            var data = google.visualization.arrayToDataTable(result);
 	                            var options = {};
 	                            chart_div.show();
@@ -32,9 +35,10 @@
 	                    }
 	                });
 	            });
-	        })(jQuery);
-    </script>
-{% endblock %}
-{% block title %}
+		    })(jQuery);
+	    </script>
+	</head>
+</%block>
+<%block name="title">
 	Presence by weekday
-{% endblock %}
+</%block>

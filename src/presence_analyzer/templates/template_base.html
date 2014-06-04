@@ -1,12 +1,10 @@
-{%
-set page_list = [
+<% page_list = [
     (url_for('templates_renderer', template_name='presence_weekday'), 'presence by weekday'),
     (url_for('templates_renderer',
     template_name='mean_time_weekdays'), 'presence mean time'),
     (url_for('templates_renderer',
     template_name='presence_start_end'), 'presence start end'),   
-]
-%}
+] %>
 
 <!doctype html>
 <html lang=en>
@@ -17,34 +15,32 @@ set page_list = [
     <meta name="description" content=""/>
     <meta name="author" content="STX Next sp. z o.o."/>
     <meta name="viewport" content="width=device-width; initial-scale=1.0">    
-    <link href="{{ url_for('static', filename='css/normalize.css') }}" media="all" rel="stylesheet" type="text/css" />
-    <link href="{{ url_for('static', filename='css/style.css') }}" media="all" rel="stylesheet" type="text/css" />
+    <link href="${url_for('static', filename='css/normalize.css')}" media="all" rel="stylesheet" type="text/css" />
+    <link href="${url_for('static', filename='css/style.css')}" media="all" rel="stylesheet" type="text/css" />
 
-    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="${url_for('static', filename='js/jquery.min.js')}"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    {% block head %}
-    {% endblock %}
+    
 </head>
-
+    <%block name="content"/>
 <body>
     <div id="main">
         <div id="header">
             <h1>Presence analyzer</h1>
             <ul>
-                {% for href, caption in page_list %}
+                % for href, caption in page_list:
                 <li
-                    {% if caption == active %}
+                    % if caption == self.attr.active:
                         id="selected"
-                    {% endif %}>
-                    <a href="{{ href }}"> {{caption}} </a>
+                    % endif
+                    ><a href="${href}"> ${caption} </a>
                 </li>
-                {% endfor %}
+                % endfor
             </ul>
         </div>
         <div id="content">
             <h2>
-                {% block title %}
-                {% endblock %}
+                <%block name="title"/>
             </h2>
             <p>
                 <select id="user_id" style="display: none">
@@ -53,10 +49,11 @@ set page_list = [
                 <div id="chart_div" style="display: none">
                 </div>
                 <div id="loading">
-                    <img src="{{ url_for('static', filename='img/loading.gif') }}"/>
+                    <img src="${url_for('static', filename='img/loading.gif')}"/>
                 </div>
             </p>
         </div>
     </div>
+
 </body>
 </html>
