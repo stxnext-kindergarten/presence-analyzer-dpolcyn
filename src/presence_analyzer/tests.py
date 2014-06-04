@@ -126,8 +126,8 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertIn('Presence mean time by weekday', resp.data)
         self.assertEqual(resp.status_code, 200)
 
-        resp = self.client.get('/mean_time_weekdays')
-        self.assertIn('Presence mean time by weekday', resp.data)
+        resp = self.client.get('/presence_stat_end')
+        self.assertIn('Presence start end', resp.data)
         self.assertEqual(resp.status_code, 200)
 
         resp = self.client.get('/bad_page_name')
