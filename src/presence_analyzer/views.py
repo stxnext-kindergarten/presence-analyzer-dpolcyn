@@ -105,7 +105,7 @@ def presence_start_end_view(user_id):
     return result
 
 
-@app.route('/templates/<string:template_name>', methods=['GET'])
+@app.route('/<string:template_name>', methods=['GET'])
 def templates_renderer(template_name):
     """
     Render templates.
