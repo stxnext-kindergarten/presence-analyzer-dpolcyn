@@ -90,14 +90,11 @@ def _serve(action, debug=False, dry_run=False):
     paste.script.command.run()
 
 
-
 # bin/flask-ctl ...
 def run():
     action_shell = werkzeug.script.make_shell(make_shell, make_shell.__doc__)
-
-    
-
     # bin/flask-ctl serve [fg|start|stop|restart|status]
+
     def action_serve(action=('a', 'start'), dry_run=False):
         """Serve the application.
 
