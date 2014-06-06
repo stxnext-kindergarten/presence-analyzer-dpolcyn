@@ -52,6 +52,16 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.status_code, 302)
         assert resp.headers['Location'].endswith('/presence_weekday')
 
+    def test_api_users(self):
+        """
+        Test users listing.
+        """
+        resp = self.client.get('/api/v1/users')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, 'application/json')
+        data = json.loads(resp.data)
+        self.assertEqual(len(data), 2)
+
     def test_api_users_v2(self):
         """
         Test users listingv2.
@@ -62,8 +72,7 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         data = json.loads(resp.data)
         self.assertEqual(len(data), 84)
         self.assertEqual(
-            data[u"10"],
-            {
+            data[u"10"], {
                 u'image': u'https://intranet.stxnext.pl/api/images/users/10',
                 u'name': u'Maciej Z.'
             }
@@ -160,10 +169,9 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         """
         Before each test, set up a environment.
         """
-        main.app.config.update(
-            {
-                'DATA_CSV': TEST_DATA_CSV,
-                'DATA_XML': TEST_DATA_XML
+        main.app.config.update({
+            'DATA_CSV': TEST_DATA_CSV,
+            'DATA_XML': TEST_DATA_XML
             }
         )
 
@@ -308,8 +316,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             sample_data[10],
         )
         self.assertEqual(
-            days,
-            {
+            days, {
                 0: {'start': [], 'end': []},
                 1: {'start': [34745], 'end': [64792]},
                 2: {'start': [33592], 'end': [58057]},
@@ -323,8 +330,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             sample_data[11],
         )
         self.assertAlmostEqual(
-            days,
-            {
+            days, {
                 0: {'start': [33134], 'end': [57257]},
                 1: {'start': [33590], 'end': [50154]},
                 2: {'start': [33206], 'end': [58527]},

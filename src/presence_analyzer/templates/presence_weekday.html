@@ -24,7 +24,7 @@
 	                    var selected_user = $("#user_id").val();
 	                    var chart_div = $('#chart_div');
 	                    if(selected_user) {
-	                    	var avatar = $('#image').show().find('img').attr('src', users[selected_user]["image"])
+	                    	var avatar = $("#image").attr('src', users[selected_user]["image"])
 	                        loading.show();
 	                        chart_div.hide();
 	                        avatar.hide();
