@@ -139,8 +139,7 @@ def get_xml_data():
         protocol = server.find('protocol').text
         users = tree.find('users')
         profile = {
-            int(user.get('id')):
-            {
+            int(user.get('id')): {
                 'name': unicode(user.find('name').text),
                 'image': "{protocol}://{host}{image}".format(
                     protocol=protocol,

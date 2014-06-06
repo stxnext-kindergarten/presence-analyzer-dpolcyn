@@ -5,9 +5,11 @@
 import os
 import sys
 from functools import partial
+from presence_analyzer import app
 
 import paste.script.command
 import werkzeug.script
+import presence_analyzer
 
 etc = partial(os.path.join, 'parts', 'etc')
 
@@ -27,7 +29,6 @@ del _buildout_path
 
 # bin/paster serve parts/etc/deploy.ini
 def make_app(global_conf={}, config=DEPLOY_CFG, debug=False):
-    from presence_analyzer import app
     app.config.from_pyfile(abspath(config))
     app.debug = debug
     return app
@@ -48,6 +49,17 @@ def make_shell():
     http = app.test_client()
     reqctx = app.test_request_context
     return locals()
+
+# bin/flask-ctl xml
+def action_update_database(debug=True):
+    app = presence_analyzer.app
+    if debug:
+        config = DEBUG_CFG
+    else:
+        config = DEPLOY_CFG
+    app.config.from_pyfile(abspath(config))
+    app.debug = debug
+    presence_analyzer.utils.update_user_xml()
 
 
 def _serve(action, debug=False, dry_run=False):
@@ -78,9 +90,12 @@ def _serve(action, debug=False, dry_run=False):
     paste.script.command.run()
 
 
+
 # bin/flask-ctl ...
 def run():
     action_shell = werkzeug.script.make_shell(make_shell, make_shell.__doc__)
+
+    
 
     # bin/flask-ctl serve [fg|start|stop|restart|status]
     def action_serve(action=('a', 'start'), dry_run=False):
