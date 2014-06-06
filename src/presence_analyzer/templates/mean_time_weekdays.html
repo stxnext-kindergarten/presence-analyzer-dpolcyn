@@ -27,11 +27,12 @@
                     $('#user_id').change(function(){
                         var selected_user = $("#user_id").val();
                         var chart_div = $('#chart_div');
+                        var avatar = $("#image");
                         if(selected_user) {
-                            var avatar = $('#image').show().find('img').attr('src', users[selected_user]["image"])
                             loading.show();
                             chart_div.hide();     
-                            avatar.hide();                       
+                            avatar.hide();       
+                            avatar.attr('src', users[selected_user]["image"])
                             $.getJSON("${url_for('mean_time_weekday_view', user_id = 0)}"+selected_user, function(result) {
                                 $.each(result, function(index, value) {
                                     value[1] = parseInterval(value[1]);

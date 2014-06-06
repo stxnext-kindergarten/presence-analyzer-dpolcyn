@@ -70,11 +70,11 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'application/json')
         data = json.loads(resp.data)
-        self.assertEqual(len(data), 84)
+        self.assertEqual(len(data), 2)
         self.assertEqual(
-            data[u"10"], {
-                u'image': u'https://intranet.stxnext.pl/api/images/users/10',
-                u'name': u'Maciej Z.'
+            data[u"141"], {
+                u'image': u'https://intranet.stxnext.pl/api/images/users/141',
+                u'name': u'Adam P.'
             }
         )
 
@@ -201,16 +201,16 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         data = utils.get_xml_data()
         self.assertIsInstance(data, dict)
         sample_data = {
-            'image': u'https://intranet.stxnext.pl/api/images/users/19',
-            'name': u'Anna K.'
+            'image': u'https://intranet.stxnext.pl/api/images/users/141',
+            'name': u'Adam P.'
         }
-        self.assertEqual(sample_data, data[19])
+        self.assertEqual(sample_data, data[141])
         sample_data = {
-            'image': u'https://intranet.stxnext.pl/api/images/users/160',
-            'name': u'Olga K.'
+            'image': u'https://intranet.stxnext.pl/api/images/users/176',
+            'name': u'Adrian K.'
         }
         self.assertIn(sample_data, data.values())
-        self.assertItemsEqual(data[10].keys(), [u'image', u'name'])
+        self.assertItemsEqual(data[141].keys(), [u'image', u'name'])
 
     def test_group_by_weekday(self):
         """
