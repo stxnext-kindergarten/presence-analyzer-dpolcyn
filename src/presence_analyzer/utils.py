@@ -12,6 +12,10 @@ from flask import Response
 
 from presence_analyzer.main import app
 
+import xml
+import urllib2
+from lxml import etree
+
 import logging
 log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
 
@@ -112,3 +116,38 @@ def count_avg_group_by_weekday(items):
         result[date.weekday()]['end'].append(seconds_since_midnight(end))
 
     return result
+
+
+def update_user_xml():
+    """
+    Downloading data from remote adres to xml file.
+    """
+    with open(app.config['DATA_XML'], 'w+') as xmlfile:
+        remote_data = urllib2.urlopen('http://sargo.bolt.stxnext.pl/users.xml')
+        new_data = remote_data.read()
+        xmlfile.write(new_data)
+
+
+def get_xml_data():
+    """
+    Get and parse data from xml file.
+    """
+    with open(app.config['DATA_XML'], 'r') as xmlfile:
+        tree = etree.parse(xmlfile)
+        server = tree.find('server')
+        host = server.find('host').text
+        protocol = server.find('protocol').text
+        users = tree.find('users')
+        profile = {
+            int(user.get('id')):
+            {
+                'name': unicode(user.find('name').text),
+                'image': "{protocol}://{host}{image}".format(
+                    protocol=protocol,
+                    host=host,
+                    image=user.find('avatar').text,
+                )
+            }
+            for user in users.findall('user')
+        }
+        return profile

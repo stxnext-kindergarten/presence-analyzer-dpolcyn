@@ -13,11 +13,13 @@
 
             (function($) {
                 $(document).ready(function(){
-                    var loading = $('#loading');
-                    $.getJSON("${url_for('users_view')}", function(result) {
+                    var loading = $('#loading'), users, avatars = {};
+                    $.getJSON("${url_for('users_xml_view')}", function(result) {
                         var dropdown = $("#user_id");
-                        $.each(result, function(item) {
-                            dropdown.append($("<option />").val(this.user_id).text(this.name));
+                        users = result;
+                        $.each(result, function(key, item) {
+                            avatars[0] = item.image
+                            dropdown.append($("<option />").val(key).text(item.name));
                         });
                         dropdown.show();
                         loading.hide();
@@ -26,8 +28,10 @@
                         var selected_user = $("#user_id").val();
                         var chart_div = $('#chart_div');
                         if(selected_user) {
+                            avatar = $('#image').show().find('img').attr('src', users[selected_user]["image"])
                             loading.show();
-                            chart_div.hide();                        
+                            chart_div.hide();   
+                            avatar.hide();                
                             $.getJSON("${url_for('presence_start_end_view', user_id = 0)}"+selected_user, function(result){
                                 $.each(result, function(index, value) {
                                     index[0] = parseInterval(index[1]);
@@ -46,6 +50,7 @@
                                 formatter.format(data, 1);
                                 formatter.format(data, 2);
                                 chart_div.show();
+                                avatar.show();
                                 loading.hide();
                                 var chart = new google.visualization.Timeline(chart_div[0]);
                                 chart.draw(data, options);

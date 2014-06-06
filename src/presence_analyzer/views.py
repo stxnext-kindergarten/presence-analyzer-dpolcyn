@@ -18,6 +18,7 @@ from presence_analyzer.utils import (
     mean,
     group_by_weekday,
     count_avg_group_by_weekday,
+    get_xml_data,
 )
 
 import logging
@@ -32,15 +33,14 @@ def mainpage():
     return redirect('/templates/presence_weekday')
 
 
-@app.route('/api/v1/users', methods=['GET'])
+@app.route('/api/v2/users', methods=['GET'])
 @jsonify
-def users_view():
+def users_xml_view():
     """
     Users listing for dropdown.
     """
-    data = get_data()
-    return [{'user_id': i, 'name': 'User {0}'.format(str(i))}
-            for i in data.keys()]
+    data = get_xml_data()
+    return data
 
 
 @app.route('/api/v1/mean_time_weekday/<int:user_id>', methods=['GET'])
