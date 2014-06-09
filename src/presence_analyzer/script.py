@@ -50,6 +50,7 @@ def make_shell():
     reqctx = app.test_request_context
     return locals()
 
+
 # bin/flask-ctl xml
 def action_update_database(debug=True):
     app = presence_analyzer.app

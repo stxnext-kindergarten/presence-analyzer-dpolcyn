@@ -10,7 +10,7 @@ def read(*rnames):
 
 
 setup(
-	name=name,
+    name=name,
     version=version,
     description="Presence analyzer",
     long_description=read('README.md'),
@@ -29,13 +29,14 @@ setup(
         'Flask',
         'lxml',
     ],
-    entry_points="""
-[console_scripts]
-flask-ctl = presence_analyzer.script:run
-xml = presence_analyzer.script:action_update_database
+    entry_points=
+    """
+    [console_scripts]
+    flask-ctl = presence_analyzer.script:run
+    xml = presence_analyzer.script:action_update_database
 
-[paste.app_factory]
-main = presence_analyzer.script:make_app
-debug = presence_analyzer.script:make_debug
-""",
+    [paste.app_factory]
+    main = presence_analyzer.script:make_app
+    debug = presence_analyzer.script:make_debug
+    """,
 )
