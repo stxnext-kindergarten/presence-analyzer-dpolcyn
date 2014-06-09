@@ -8,10 +8,15 @@ import datetime
 import unittest
 
 from presence_analyzer import main, views, utils
+from presence_analyzer.main import app
 
 
 TEST_DATA_CSV = os.path.join(
-    os.path.dirname(__file__), '..', '..', 'runtime', 'data', 'test_data.csv'
+    os.path.dirname(__file__), '..', '..', 'runtime', 'data', 'test_data.csv',
+)
+
+TEST_DATA_XML = os.path.join(
+    os.path.dirname(__file__), '..', '..', 'runtime', 'data', 'users_test.xml',
 )
 
 
@@ -25,7 +30,10 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         """
         Before each test, set up a environment.
         """
-        main.app.config.update({'DATA_CSV': TEST_DATA_CSV})
+        main.app.config.update({
+            'DATA_CSV': TEST_DATA_CSV,
+            'DATA_XML': TEST_DATA_XML
+        })
         self.client = main.app.test_client()
 
     def tearDown(self):
@@ -52,6 +60,22 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         data = json.loads(resp.data)
         self.assertEqual(len(data), 2)
         self.assertDictEqual(data[0], {u'user_id': 10, u'name': u'User 10'})
+
+    def test_api_users_v2(self):
+        """
+        Test users listingv2.
+        """
+        resp = self.client.get('/api/v2/users')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, 'application/json')
+        data = json.loads(resp.data)
+        self.assertEqual(len(data), 2)
+        self.assertEqual(
+            data[u"141"], {
+                u'image': u'https://intranet.stxnext.pl/api/images/users/141',
+                u'name': u'Adam P.'
+            }
+        )
 
     def test_mean_time_weekday_view(self):
         """
@@ -126,7 +150,7 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertIn('Presence mean time by weekday', resp.data)
         self.assertEqual(resp.status_code, 200)
 
-        resp = self.client.get('/presence_stat_end')
+        resp = self.client.get('/presence_start_end')
         self.assertIn('Presence start end', resp.data)
         self.assertEqual(resp.status_code, 200)
 
@@ -144,7 +168,10 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         """
         Before each test, set up a environment.
         """
-        main.app.config.update({'DATA_CSV': TEST_DATA_CSV})
+        main.app.config.update({
+            'DATA_CSV': TEST_DATA_CSV,
+            'DATA_XML': TEST_DATA_XML
+        })
 
     def tearDown(self):
         """
@@ -164,6 +191,24 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         self.assertItemsEqual(data[10][sample_date].keys(), ['start', 'end'])
         self.assertEqual(data[10][sample_date]['start'],
                          datetime.time(9, 39, 5))
+
+    def test_get_xml_data(self):
+        """
+        Test parsing XML file.
+        """
+        data = utils.get_xml_data()
+        self.assertIsInstance(data, dict)
+        sample_data = {
+            'image': u'https://intranet.stxnext.pl/api/images/users/141',
+            'name': u'Adam P.'
+        }
+        self.assertEqual(sample_data, data[141])
+        sample_data = {
+            'image': u'https://intranet.stxnext.pl/api/images/users/176',
+            'name': u'Adrian K.'
+        }
+        self.assertIn(sample_data, data.values())
+        self.assertItemsEqual(data[141].keys(), [u'image', u'name'])
 
     def test_group_by_weekday(self):
         """
@@ -269,8 +314,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             sample_data[10],
         )
         self.assertEqual(
-            days,
-            {
+            days, {
                 0: {'start': [], 'end': []},
                 1: {'start': [34745], 'end': [64792]},
                 2: {'start': [33592], 'end': [58057]},
@@ -284,8 +328,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             sample_data[11],
         )
         self.assertAlmostEqual(
-            days,
-            {
+            days, {
                 0: {'start': [33134], 'end': [57257]},
                 1: {'start': [33590], 'end': [50154]},
                 2: {'start': [33206], 'end': [58527]},
