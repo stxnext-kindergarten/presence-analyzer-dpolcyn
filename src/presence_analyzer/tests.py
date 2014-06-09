@@ -171,8 +171,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         main.app.config.update({
             'DATA_CSV': TEST_DATA_CSV,
             'DATA_XML': TEST_DATA_XML
-            }
-        )
+        })
 
     def tearDown(self):
         """
