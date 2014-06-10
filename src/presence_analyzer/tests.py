@@ -18,6 +18,10 @@ TEST_DATA_CSV = os.path.join(
 TEST_DATA_XML = os.path.join(
     os.path.dirname(__file__), '..', '..', 'runtime', 'data', 'users_test.xml',
 )
+TEST_CACHE_DATA_CSV = os.path.join(
+    os.path.dirname(__file__), '..', '..', 'runtime', 'data',
+    'test_cache_data.csv',
+)
 
 
 # pylint: disable=E1103
@@ -32,7 +36,8 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         """
         main.app.config.update({
             'DATA_CSV': TEST_DATA_CSV,
-            'DATA_XML': TEST_DATA_XML
+            'DATA_XML': TEST_DATA_XML,
+            'DATA_CACHE': TEST_CACHE_DATA_CSV
         })
         self.client = main.app.test_client()
 
@@ -170,7 +175,8 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         """
         main.app.config.update({
             'DATA_CSV': TEST_DATA_CSV,
-            'DATA_XML': TEST_DATA_XML
+            'DATA_XML': TEST_DATA_XML,
+            'DATA_CACHE': TEST_CACHE_DATA_CSV
         })
 
     def tearDown(self):
@@ -338,6 +344,19 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
                 6: {'start': [], 'end': []},
             }
         )
+
+    def test_cache(self):
+        """
+        Cache test.
+        """
+        first_data = utils.get_data()
+        main.app.config.update({'DATA_CSV': TEST_CACHE_DATA_CSV})
+        second_data = utils.get_data()
+        self.assertDictEqual(first_data, second_data)
+        utils.CACHE = {}
+        second_data = utils.get_data()
+        self.assertNotEqual(first_data, second_data)
+        utils.CACHE = {}
 
 
 def suite():

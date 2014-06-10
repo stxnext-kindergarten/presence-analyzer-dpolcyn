@@ -4,6 +4,8 @@ Helper functions used in views.
 """
 
 import csv
+import threading
+import time
 from json import dumps
 from functools import wraps
 from datetime import datetime
@@ -19,6 +21,47 @@ from lxml import etree
 import logging
 log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
 
+CACHE = {}
+
+
+def cache(key, duration):
+    """
+        Cache function.
+        If called item in function, return item.
+        If not return item and add to cache.
+    """
+    def _cache(function):
+        def __cache(*args, **kwargs):
+            if key in CACHE:
+                if (time.time() - CACHE[key]['time']) < duration:
+                    return CACHE[key]['value']
+
+            result = function(*args, **kwargs)
+            CACHE[key] = {
+                'value': result,
+                'time': time.time()
+            }
+
+            return CACHE[key]['value']
+        return __cache
+    return _cache
+
+
+def lock(function):
+    """
+        Decorator. If thread is executing the function and another one
+        want to call the function, then second one will immediately
+        receive a return value.
+    """
+    function.locker = threading.Lock()
+
+    @wraps(function)
+    def locking(*args, **kwargs):
+        with function.locker:
+            result = function(*args, **kwargs)
+        return result
+    return locking
+
 
 def jsonify(function):
     """
@@ -31,6 +74,8 @@ def jsonify(function):
     return inner
 
 
+@lock
+@cache('user_id', 600)
 def get_data():
     """
     Extracts presence data from CSV file and groups it by user_id.
