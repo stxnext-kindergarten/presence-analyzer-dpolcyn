@@ -22,7 +22,6 @@ import logging
 log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
 
 CACHE = {}
-locker = threading.Lock()
 
 
 def cache(key, duration):
@@ -42,6 +41,7 @@ def cache(key, duration):
                 'value': result,
                 'time': time.time()
             }
+
             return CACHE[key]['value']
         return __cache
     return _cache
@@ -53,8 +53,11 @@ def lock(function):
         want to call the function, then second one will immediately
         receive a return value.
     """
+    function.locker = threading.Lock()
+
+    @wraps(function)
     def locking(*args, **kwargs):
-        with locker:
+        with function.locker:
             result = function(*args, **kwargs)
         return result
     return locking
@@ -71,8 +74,8 @@ def jsonify(function):
     return inner
 
 
-@cache('user_id', 600)
 @lock
+@cache('user_id', 600)
 def get_data():
     """
     Extracts presence data from CSV file and groups it by user_id.

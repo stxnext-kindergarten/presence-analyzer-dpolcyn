@@ -353,6 +353,11 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         main.app.config.update({'DATA_CSV': TEST_CACHE_DATA_CSV})
         second_data = utils.get_data()
         self.assertDictEqual(first_data, second_data)
+        utils.CACHE = {}
+        second_data = utils.get_data()
+        self.assertNotEqual(first_data, second_data)
+        main.app.config.update({'DATA_CSV': TEST_DATA_CSV})
+        utils.CACHE = {}
 
 
 def suite():
