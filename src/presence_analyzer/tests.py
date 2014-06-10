@@ -356,8 +356,6 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         utils.CACHE = {}
         second_data = utils.get_data()
         self.assertNotEqual(first_data, second_data)
-        utils.CACHE = {}
-
 
 def suite():
     """
