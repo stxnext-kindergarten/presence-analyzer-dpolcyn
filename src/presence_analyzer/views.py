@@ -24,13 +24,19 @@ from presence_analyzer.utils import (
 import logging
 log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
 
+AVAILABLE_TEMPLATES = (
+    'presence_weekday',
+    'mean_time_weekdays',
+    'presence_start_end',
+)
+
 
 @app.route('/')
 def mainpage():
     """
     Redirects to front page.
     """
-    return redirect('/templates/presence_weekday')
+    return redirect('/presence_weekday')
 
 
 @app.route('/api/v1/users', methods=['GET'])
@@ -116,12 +122,16 @@ def presence_start_end_view(user_id):
     return result
 
 
+@app.route('/')
 @app.route('/<string:template_name>', methods=['GET'])
 def templates_renderer(template_name):
     """
     Render templates.
     """
     try:
-        return render_template(template_name + ".html")
+        if template_name in AVAILABLE_TEMPLATES:
+            return render_template(template_name + ".html")
+        else:
+            raise TopLevelLookupException
     except TopLevelLookupException:
         return make_response("page not found", 404)
