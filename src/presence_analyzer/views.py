@@ -56,7 +56,7 @@ def users_view():
 def users_xml_view():
     """
      Users listing for dropdown.
-"""
+    """
     data = get_xml_data()
     locale.setlocale(locale.LC_COLLATE, 'pl_PL.UTF-8')
     sorted_data = sorted(
