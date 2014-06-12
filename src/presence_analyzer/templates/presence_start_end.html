@@ -16,7 +16,6 @@
                     var loading = $('#loading'), avatars = {};
                     $.getJSON("${url_for('users_xml_view')}", function(result) {
                         var dropdown = $("#user_id");
-                        users = result;
                         $.each(result, function(item) {
                             avatars[this[0]] = this[1].image;
                             dropdown.append($("<option />").val(this[0]).text(this[1].name));
