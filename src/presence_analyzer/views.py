@@ -12,7 +12,6 @@ from flask.ext.mako import render_template
 from mako.exceptions import TopLevelLookupException
 import locale
 
-from collections import defaultdict, OrderedDict
 from presence_analyzer.main import app
 from presence_analyzer.utils import (
     jsonify,
