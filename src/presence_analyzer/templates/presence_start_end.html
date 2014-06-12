@@ -13,12 +13,12 @@
 
             (function($) {
                 $(document).ready(function(){
-                    var loading = $('#loading'), users, avatars = {};
+                    var loading = $('#loading'), avatars = {};
                     $.getJSON("${url_for('users_xml_view')}", function(result) {
                         var dropdown = $("#user_id");
                         users = result;
                         $.each(result, function(item) {
-                            avatars[this[0]] = this[1].image
+                            avatars[this[0]] = this[1].image;
                             dropdown.append($("<option />").val(this[0]).text(this[1].name));
                         });
                         dropdown.show();
@@ -27,7 +27,7 @@
                     $('#user_id').change(function(){
                         var selected_user = $("#user_id").val();
                         var chart_div = $('#chart_div');
-                        var avatar = $('#image')
+                        var avatar = $('#image');
                         if(selected_user) {
                             loading.show();
                             chart_div.hide();   

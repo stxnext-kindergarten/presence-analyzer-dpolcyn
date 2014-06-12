@@ -9,12 +9,11 @@
 
 	        (function($) {
 	            $(document).ready(function(){
-	                var loading = $('#loading'), users, avatars = {};
+	                var loading = $('#loading'), avatars = {};
 	                $.getJSON("${url_for('users_xml_view')}", function(result) {
 	                    var dropdown = $("#user_id");
-	                    users = result;
 	                    $.each(result, function(item) {
-	                    	avatars[this[0]] = this[1].image
+	                    	avatars[this[0]] = this[1].image;
 	                    	dropdown.append($("<option />").val(this[0]).text(this[1].name));
 	                    });
 	                    dropdown.show();
@@ -30,7 +29,7 @@
 	                        avatar.hide();
 	                        avatar.attr('src', avatars[selected_user]);
 	                        $.getJSON("${url_for('presence_weekday_view', user_id=0)}"+selected_user, function(result) {
-	                            var data = google.visualization.arrayToDataTable(result)
+	                            var data = google.visualization.arrayToDataTable(result);
 	                            var options = {};
 	                            avatar.show();
 	                            chart_div.show();
