@@ -13,13 +13,13 @@
 
             (function($) {
                 $(document).ready(function(){
-                    var loading = $('#loading'), users, avatars = {};
+                    var loading = $('#loading'), avatars = {};
                     $.getJSON("${url_for('users_xml_view')}", function(result) {
                         var dropdown = $("#user_id");
                         users = result;
-                        $.each(result, function(key, item) {
-                            avatars[0] = item.image
-                            dropdown.append($("<option />").val(key).text(item.name));
+                        $.each(result, function(item) {
+                            avatars[this[0]] = this[1].image;
+                            dropdown.append($("<option />").val(this[0]).text(this[1].name));
                         });
                         dropdown.show();
                         loading.hide();
@@ -32,7 +32,7 @@
                             loading.show();
                             chart_div.hide();     
                             avatar.hide();       
-                            avatar.attr('src', users[selected_user]["image"])
+                            avatar.attr('src', avatars[selected_user]);
                             $.getJSON("${url_for('mean_time_weekday_view', user_id = 0)}"+selected_user, function(result) {
                                 $.each(result, function(index, value) {
                                     value[1] = parseInterval(value[1]);

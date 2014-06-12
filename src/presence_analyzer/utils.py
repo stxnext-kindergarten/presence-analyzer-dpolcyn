@@ -4,6 +4,8 @@ Helper functions used in views.
 """
 
 import csv
+import threading
+import time
 from json import dumps
 from functools import wraps
 from datetime import datetime
@@ -17,13 +19,54 @@ import urllib2
 from lxml import etree
 
 import logging
-log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
+log = logging.getLogger(__name__) # pylint: disable-msg=C0103
+
+CACHE = {}
+
+
+def cache(key, duration):
+    """
+Cache function.
+If called item in function, return item.
+If not return item and add to cache.
+"""
+    def _cache(function): # pylint: disable-msg=C0111
+        def __cache(*args, **kwargs):
+            if key in CACHE:
+                if (time.time() - CACHE[key]['time']) < duration:
+                    return CACHE[key]['value']
+
+            result = function(*args, **kwargs)
+            CACHE[key] = {
+                'value': result,
+                'time': time.time()
+            }
+
+            return CACHE[key]['value']
+        return __cache
+    return _cache
+
+
+def lock(function):
+    """
+Decorator. If thread is executing the function and another one
+want to call the function, then second one will immediately
+receive a return value.
+"""
+    function.locker = threading.Lock()
+
+    @wraps(function)
+    def locking(*args, **kwargs):
+        with function.locker:
+            result = function(*args, **kwargs)
+        return result
+    return locking
 
 
 def jsonify(function):
     """
-    Creates a response with the JSON representation of wrapped function result.
-    """
+Creates a response with the JSON representation of wrapped function result.
+"""
     @wraps(function)
     def inner(*args, **kwargs):
         return Response(dumps(function(*args, **kwargs)),
@@ -31,24 +74,26 @@ def jsonify(function):
     return inner
 
 
+@lock
+@cache('user_id', 600)
 def get_data():
     """
-    Extracts presence data from CSV file and groups it by user_id.
+Extracts presence data from CSV file and groups it by user_id.
 
-    It creates structure like this:
-    data = {
-        'user_id': {
-            datetime.date(2013, 10, 1): {
-                'start': datetime.time(9, 0, 0),
-                'end': datetime.time(17, 30, 0),
-            },
-            datetime.date(2013, 10, 2): {
-                'start': datetime.time(8, 30, 0),
-                'end': datetime.time(16, 45, 0),
-            },
-        }
-    }
-    """
+It creates structure like this:
+data = {
+'user_id': {
+datetime.date(2013, 10, 1): {
+'start': datetime.time(9, 0, 0),
+'end': datetime.time(17, 30, 0),
+},
+datetime.date(2013, 10, 2): {
+'start': datetime.time(8, 30, 0),
+'end': datetime.time(16, 45, 0),
+},
+}
+}
+"""
     data = {}
     with open(app.config['DATA_CSV'], 'r') as csvfile:
         presence_reader = csv.reader(csvfile, delimiter=',')
@@ -72,8 +117,8 @@ def get_data():
 
 def group_by_weekday(items):
     """
-    Groups presence entries by weekday.
-    """
+Groups presence entries by weekday.
+"""
     result = {i: [] for i in range(7)}
     for date in items:
         start = items[date]['start']
@@ -84,29 +129,29 @@ def group_by_weekday(items):
 
 def seconds_since_midnight(time):
     """
-    Calculates amount of seconds since midnight.
-    """
+Calculates amount of seconds since midnight.
+"""
     return time.hour * 3600 + time.minute * 60 + time.second
 
 
 def interval(start, end):
     """
-    Calculates inverval in seconds between two datetime.time objects.
-    """
+Calculates inverval in seconds between two datetime.time objects.
+"""
     return seconds_since_midnight(end) - seconds_since_midnight(start)
 
 
 def mean(items):
     """
-    Calculates arithmetic mean. Returns zero for empty lists.
-    """
+Calculates arithmetic mean. Returns zero for empty lists.
+"""
     return float(sum(items)) / len(items) if len(items) > 0 else 0
 
 
 def count_avg_group_by_weekday(items):
     """
-    Groups presence starts, ends by weekday.
-    """
+Groups presence starts, ends by weekday.
+"""
 
     result = {i: {'start': [], 'end': []} for i in range(7)}
     for date in items:
@@ -120,8 +165,8 @@ def count_avg_group_by_weekday(items):
 
 def update_user_xml():
     """
-    Downloading data from remote adres to xml file.
-    """
+Downloading data from remote adres to xml file.
+"""
     with open(app.config['DATA_XML'], 'w+') as xmlfile:
         remote_data = urllib2.urlopen('http://sargo.bolt.stxnext.pl/users.xml')
         new_data = remote_data.read()
@@ -130,8 +175,8 @@ def update_user_xml():
 
 def get_xml_data():
     """
-    Get and parse data from xml file.
-    """
+Get and parse data from xml file.
+"""
     with open(app.config['DATA_XML'], 'r') as xmlfile:
         tree = etree.parse(xmlfile)
         server = tree.find('server')

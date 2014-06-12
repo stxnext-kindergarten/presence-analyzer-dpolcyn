@@ -13,12 +13,12 @@
 
             (function($) {
                 $(document).ready(function(){
-                    var loading = $('#loading'), users, avatars = {};
+                    var loading = $('#loading'), avatars = {};
                     $.getJSON("${url_for('users_xml_view')}", function(result) {
                         var dropdown = $("#user_id");
                         users = result;
                         $.each(result, function(key, item) {
-                            avatars[0] = item.image
+                            avatars[0] = item.image;
                             dropdown.append($("<option />").val(key).text(item.name));
                         });
                         dropdown.show();
