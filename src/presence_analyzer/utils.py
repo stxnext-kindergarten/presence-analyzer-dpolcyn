@@ -19,7 +19,7 @@ import urllib2
 from lxml import etree
 
 import logging
-log = logging.getLogger(__name__) # pylint: disable-msg=C0103
+log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
 
 CACHE = {}
 
