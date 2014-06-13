@@ -33,7 +33,7 @@
                             chart_div.hide();
                             avatar.hide();
                             loading.show();         
-                            avatar.attr('src', users[selected_user]["image"]);
+                            avatar.attr('src', users[selected_user].image);
                             $.getJSON("${url_for('presence_start_end_view', user_id = 0)}"+selected_user, function(result) {
                                 $.each(result, function(index, value) {
                                     index[0] = parseInterval(index[1]);
@@ -58,8 +58,8 @@
                                     var chart = new google.visualization.Timeline(chart_div[0]);
                                     chart.draw(data, options);
                                 } else {
-                                    avatar.attr('src', users[selected_user]["image"]);
-                                    chart_div.text('Sory, no data for ' +   users[selected_user]["name"]);
+                                    avatar.attr('src', users[selected_user].image);
+                                    chart_div.text('Sory, no data for ' +   users[selected_user].name);
                                     loading.hide();
                                     chart_div.show();
                                     avatar.show();
