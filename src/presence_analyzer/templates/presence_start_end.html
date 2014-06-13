@@ -53,17 +53,15 @@
                                     formatter.format(data, 1);
                                     formatter.format(data, 2);
                                     chart_div.show();
-                                    avatar.show();
-                                    loading.hide();
                                     var chart = new google.visualization.Timeline(chart_div[0]);
                                     chart.draw(data, options);
                                 } else {
                                     avatar.attr('src', users[selected_user].image);
                                     chart_div.text('Sory, no data for ' +   users[selected_user].name);
-                                    loading.hide();
                                     chart_div.show();
-                                    avatar.show();
                                 }
+                                loading.hide();
+                                avatar.show();
                             });
                         }
                     });
