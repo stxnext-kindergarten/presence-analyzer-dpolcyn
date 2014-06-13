@@ -12,20 +12,20 @@
         <script type="text/javascript">
 
             (function($) {
-                $(document).ready(function(){
+                $(document).ready(function() {
                     var loading = $('#loading'), users = {};
                     $.getJSON("${url_for('users_xml_view')}", function(result) {
                         var dropdown = $("#user_id");
                         $.each(result, function(item) {
                             users[this[0]] = {};
-                            users[this[0]]["name"] = this[1].name;
-                            users[this[0]]["image"] = this[1].image;
+                            users[this[0]].name = this[1].name;
+                            users[this[0]].image = this[1].image;
                             dropdown.append($("<option />").val(this[0]).text(this[1].name));
                         });
                         dropdown.show();
                         loading.hide();
                     });
-                    $('#user_id').change(function(){
+                    $('#user_id').change(function() {
                         var selected_user = $("#user_id").val();
                         var chart_div = $('#chart_div');
                         var avatar = $("#image");
@@ -34,13 +34,12 @@
                             avatar.hide();
                             loading.show();   
                             avatar.attr('src', users[selected_user]["image"]);
-
                             $.getJSON("${url_for('mean_time_weekday_view', user_id = 0)}"+selected_user, function(result) {
                                 $.each(result, function(index, value) {
                                     value[1] = parseInterval(value[1]);
                                 });
                                 var data = new google.visualization.DataTable();
-                                if(result.length>0){
+                                if(result.length>0) {
                                     data.addColumn('string', 'Weekday');
                                     data.addColumn('datetime', 'Mean time (h:m:s)');
                                     data.addRows(result);
@@ -54,15 +53,13 @@
                                     loading.hide();
                                     var chart = new google.visualization.ColumnChart(chart_div[0]);
                                     chart.draw(data, options);
-                                }
-                                else{
+                                } else {
                                     avatar.attr('src', users[selected_user]["image"]);
                                     chart_div.text('Sory, no data for ' +   users[selected_user]["name"]);
                                     loading.hide();
                                     chart_div.show();
                                     avatar.show();
                                 }
-
                             });
                         }
                     });
