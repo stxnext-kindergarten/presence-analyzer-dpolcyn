@@ -78,22 +78,22 @@ Creates a response with the JSON representation of wrapped function result.
 @cache('user_id', 600)
 def get_data():
     """
-Extracts presence data from CSV file and groups it by user_id.
+    Extracts presence data from CSV file and groups it by user_id.
 
-It creates structure like this:
-data = {
-'user_id': {
-datetime.date(2013, 10, 1): {
-'start': datetime.time(9, 0, 0),
-'end': datetime.time(17, 30, 0),
-},
-datetime.date(2013, 10, 2): {
-'start': datetime.time(8, 30, 0),
-'end': datetime.time(16, 45, 0),
-},
-}
-}
-"""
+    It creates structure like this:
+    data = {
+        'user_id': {
+            datetime.date(2013, 10, 1): {
+                'start': datetime.time(9, 0, 0),
+                'end': datetime.time(17, 30, 0),
+                },
+            datetime.date(2013, 10, 2): {
+                'start': datetime.time(8, 30, 0),
+                'end': datetime.time(16, 45, 0),
+                },
+        }
+    }
+    """
     data = {}
     with open(app.config['DATA_CSV'], 'r') as csvfile:
         presence_reader = csv.reader(csvfile, delimiter=',')
@@ -117,8 +117,8 @@ datetime.date(2013, 10, 2): {
 
 def group_by_weekday(items):
     """
-Groups presence entries by weekday.
-"""
+    Groups presence entries by weekday.
+    """
     result = {i: [] for i in range(7)}
     for date in items:
         start = items[date]['start']
@@ -129,15 +129,15 @@ Groups presence entries by weekday.
 
 def seconds_since_midnight(time):
     """
-Calculates amount of seconds since midnight.
-"""
+    Calculates amount of seconds since midnight.
+    """
     return time.hour * 3600 + time.minute * 60 + time.second
 
 
 def interval(start, end):
     """
-Calculates inverval in seconds between two datetime.time objects.
-"""
+    Calculates inverval in seconds between two datetime.time objects.
+    """
     return seconds_since_midnight(end) - seconds_since_midnight(start)
 
 
@@ -150,9 +150,8 @@ Calculates arithmetic mean. Returns zero for empty lists.
 
 def count_avg_group_by_weekday(items):
     """
-Groups presence starts, ends by weekday.
-"""
-
+    Groups presence starts, ends by weekday.
+    """
     result = {i: {'start': [], 'end': []} for i in range(7)}
     for date in items:
         start = items[date]['start']
@@ -165,8 +164,8 @@ Groups presence starts, ends by weekday.
 
 def update_user_xml():
     """
-Downloading data from remote adres to xml file.
-"""
+    Downloading data from remote adres to xml file.
+    """
     with open(app.config['DATA_XML'], 'w+') as xmlfile:
         remote_data = urllib2.urlopen('http://sargo.bolt.stxnext.pl/users.xml')
         new_data = remote_data.read()
@@ -175,8 +174,8 @@ Downloading data from remote adres to xml file.
 
 def get_xml_data():
     """
-Get and parse data from xml file.
-"""
+    Get and parse data from xml file.
+    """
     with open(app.config['DATA_XML'], 'r') as xmlfile:
         tree = etree.parse(xmlfile)
         server = tree.find('server')
