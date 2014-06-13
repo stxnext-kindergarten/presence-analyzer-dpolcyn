@@ -30,7 +30,7 @@
 	                        avatar.hide();
 	                        loading.show();
 	                        avatar.attr('src', users[selected_user]["image"]);
-	                        $.getJSON("${url_for('presence_weekday_view', user_id=0)}"+selected_user, function(result) {	                    		
+	                        $.getJSON("${url_for('presence_weekday_view', user_id=0)}"+selected_user, function(result) {
 	                            var data = google.visualization.arrayToDataTable(result);
 	                            var options = {};
 		                        if(result.length>0){
