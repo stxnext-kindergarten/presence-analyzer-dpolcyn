@@ -55,7 +55,7 @@ def users_view():
 @jsonify
 def users_xml_view():
     """
-     Users listing for dropdown.
+    Users listing for dropdown.
     """
     data = get_xml_data()
     locale.setlocale(locale.LC_COLLATE, 'pl_PL.UTF-8')
