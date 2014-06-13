@@ -10,6 +10,7 @@ from flask import (
 )
 from flask.ext.mako import render_template
 from mako.exceptions import TopLevelLookupException
+import locale
 
 from presence_analyzer.main import app
 from presence_analyzer.utils import (
@@ -57,7 +58,14 @@ def users_xml_view():
     Users listing for dropdown.
     """
     data = get_xml_data()
-    return data
+    locale.setlocale(locale.LC_COLLATE, 'pl_PL.UTF-8')
+    sorted_data = sorted(
+        data.iteritems(),
+        key=lambda x: x[1]['name'],
+        cmp=locale.strcoll,
+    )
+
+    return sorted_data
 
 
 @app.route('/api/v1/mean_time_weekday/<int:user_id>', methods=['GET'])

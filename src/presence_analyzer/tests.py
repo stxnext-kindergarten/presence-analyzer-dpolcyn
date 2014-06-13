@@ -76,10 +76,14 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         data = json.loads(resp.data)
         self.assertEqual(len(data), 2)
         self.assertEqual(
-            data[u"141"], {
-                u'image': u'https://intranet.stxnext.pl/api/images/users/141',
-                u'name': u'Adam P.'
-            }
+            data[0], [
+                141, {
+                    'image':
+                    'https://intranet.stxnext.pl/api/images/users/141',
+                    'name':
+                    u'Adam P.'
+                }
+            ]
         )
 
     def test_mean_time_weekday_view(self):
