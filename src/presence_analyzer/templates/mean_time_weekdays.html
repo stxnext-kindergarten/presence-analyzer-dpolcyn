@@ -26,10 +26,10 @@
                         loading.hide();
                     });
                     $('#user_id').change(function() {
-                        var selected_user = $("#user_id").val();
-                        var chart_div = $('#chart_div');
-                        var avatar = $("#image");
-                        if(selected_user) {
+                        var selected_user = $("#user_id").val(),
+                            chart_div = $('#chart_div'),
+                            avatar = $("#image");
+                        if (selected_user) {
                             chart_div.hide();
                             avatar.hide();
                             loading.show();   
@@ -39,7 +39,7 @@
                                     value[1] = parseInterval(value[1]);
                                 });
                                 var data = new google.visualization.DataTable();
-                                if(result.length>0) {
+                                if (result.length>0) {
                                     data.addColumn('string', 'Weekday');
                                     data.addColumn('datetime', 'Mean time (h:m:s)');
                                     data.addRows(result);
@@ -53,7 +53,7 @@
                                     chart.draw(data, options);
                                 } else {
                                     avatar.attr('src', users[selected_user].image);
-                                    chart_div.text('Sory, no data for ' +   users[selected_user].name);
+                                    chart_div.text('Sory, no data for ' + users[selected_user].name);
                                     chart_div.show();
                                 }
                                 loading.hide();

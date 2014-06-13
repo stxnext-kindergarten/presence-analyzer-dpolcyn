@@ -2,13 +2,14 @@
 """
 Presence analyzer unit tests.
 """
-import os.path
-import json
+from __future__ import unicode_literals
+
 import datetime
+import json
+import os.path
 import unittest
 
 from presence_analyzer import main, views, utils
-from presence_analyzer.main import app
 
 
 TEST_DATA_CSV = os.path.join(
@@ -62,26 +63,26 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         resp = self.client.get('/api/v1/users')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'application/json')
-        data = json.loads(resp.data)
-        self.assertEqual(len(data), 2)
-        self.assertDictEqual(data[0], {u'user_id': 10, u'name': u'User 10'})
+        test_data = json.loads(resp.data)
+        self.assertEqual(len(test_data), 2)
+        self.assertDictEqual(test_data[0], {'user_id': 10, 'name': 'User 10'})
 
     def test_api_users_v2(self):
         """
-        Test users listingv2.
+        Test users listing v2.
         """
         resp = self.client.get('/api/v2/users')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'application/json')
-        data = json.loads(resp.data)
-        self.assertEqual(len(data), 2)
+        test_data = json.loads(resp.data)
+        self.assertEqual(len(test_data), 2)
         self.assertEqual(
-            data[0], [
+            test_data[0], [
                 141, {
                     'image':
                     'https://intranet.stxnext.pl/api/images/users/141',
                     'name':
-                    u'Adam P.'
+                    'Adam P.'
                 }
             ]
         )
@@ -94,17 +95,15 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'application/json')
 
-        sample_data = json.loads(resp.data)
-        self.assertEqual(sample_data, [
-            [u'Mon', 0],
-            [u'Tue', 30047.0],
-            [u'Wed', 24465.0],
-            [u'Thu', 23705.0],
-            [u'Fri', 0],
-            [u'Sat', 0],
-            [u'Sun', 0],
-            ]
-        )
+        self.assertEqual(json.loads(resp.data), [
+            ['Mon', 0],
+            ['Tue', 30047.0],
+            ['Wed', 24465.0],
+            ['Th', 23705.0],
+            ['Fri', 0],
+            ['Sat', 0],
+            ['Sun', 0],
+        ])
 
     def test_presence_weekday_view(self):
         """
@@ -115,18 +114,16 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'application/json')
 
-        sample_data = json.loads(resp.data)
-        self.assertEqual(sample_data, [
-            [u'Weekday', 'Presence (s)'],
-            [u'Mon', 0],
-            [u'Tue', 30047.0],
-            [u'Wed', 24465.0],
-            [u'Thu', 23705.0],
-            [u'Fri', 0],
-            [u'Sat', 0],
-            [u'Sun', 0],
-            ]
-        )
+        self.assertEqual(json.loads(resp.data), [
+            ['Weekday', 'Presence (s)'],
+            ['Mon', 0],
+            ['Tue', 30047.0],
+            ['Wed', 24465.0],
+            ['Th', 23705.0],
+            ['Fri', 0],
+            ['Sat', 0],
+            ['Sun', 0],
+        ])
 
     def test_presence_start_end_view(self):
         """
@@ -136,15 +133,14 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'application/json')
 
-        sample_data = json.loads(resp.data)
-        self.assertEqual(sample_data, [
-            [u'Mon', 0, 0],
-            [u'Tue', 34745.0, 64792.0],
-            [u'Wed', 33592.0, 58057.0],
-            [u'Thu', 38926.0, 62631.0],
-            [u'Fri', 0, 0],
-            [u'Sat', 0, 0],
-            [u'Sun', 0, 0],
+        self.assertEqual(json.loads(resp.data), [
+            ['Mon', 0, 0],
+            ['Tue', 34745.0, 64792.0],
+            ['Wed', 33592.0, 58057.0],
+            ['Th', 38926.0, 62631.0],
+            ['Fri', 0, 0],
+            ['Sat', 0, 0],
+            ['Sun', 0, 0],
         ])
 
     def test_templates_render(self):
@@ -193,32 +189,32 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         """
         Test parsing of CSV file.
         """
-        data = utils.get_data()
-        self.assertIsInstance(data, dict)
-        self.assertItemsEqual(data.keys(), [10, 11])
+        test_data = utils.get_data()
+        self.assertIsInstance(test_data, dict)
+        self.assertItemsEqual(test_data.keys(), [10, 11])
         sample_date = datetime.date(2013, 9, 10)
-        self.assertIn(sample_date, data[10])
-        self.assertItemsEqual(data[10][sample_date].keys(), ['start', 'end'])
-        self.assertEqual(data[10][sample_date]['start'],
+        self.assertIn(sample_date, test_data[10])
+        self.assertItemsEqual(
+            test_data[10][sample_date].keys(), ['start', 'end']
+        )
+        self.assertEqual(test_data[10][sample_date]['start'],
                          datetime.time(9, 39, 5))
 
     def test_get_xml_data(self):
         """
         Test parsing XML file.
         """
-        data = utils.get_xml_data()
-        self.assertIsInstance(data, dict)
-        sample_data = {
-            'image': u'https://intranet.stxnext.pl/api/images/users/141',
-            'name': u'Adam P.'
-        }
-        self.assertEqual(sample_data, data[141])
-        sample_data = {
-            'image': u'https://intranet.stxnext.pl/api/images/users/176',
-            'name': u'Adrian K.'
-        }
-        self.assertIn(sample_data, data.values())
-        self.assertItemsEqual(data[141].keys(), [u'image', u'name'])
+        test_data = utils.get_xml_data()
+        self.assertIsInstance(test_data, dict)
+        self.assertEqual({
+            'image': 'https://intranet.stxnext.pl/api/images/users/141',
+            'name': 'Adam P.'
+        }, test_data[141])
+        self.assertIn({
+            'image': 'https://intranet.stxnext.pl/api/images/users/176',
+            'name': 'Adrian K.'
+        }, test_data.values())
+        self.assertItemsEqual(test_data[141].keys(), ['image', 'name'])
 
     def test_group_by_weekday(self):
         """
@@ -226,8 +222,8 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         """
         sample_data = utils.get_data()
         result = utils.group_by_weekday(sample_data[10])
-        self.assertIsInstance(result, dict)
-        box = {
+
+        self.assertDictEqual({
             0: [],
             1: [30047],
             2: [24465],
@@ -235,11 +231,9 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             4: [],
             5: [],
             6: [],
-        }
-        self.assertDictEqual(box, result)
-        result = utils.group_by_weekday(sample_data[11])
-        self.assertIsInstance(result, dict)
-        box = {
+        }, result)
+        self.assertIsInstance(utils.group_by_weekday(sample_data[11]), dict)
+        self.assertDictEqual({
             0: [24123],
             1: [16564],
             2: [25321],
@@ -247,36 +241,38 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             4: [6426],
             5: [],
             6: [],
-        }
-        self.assertDictEqual(box, result)
+        }, result)
 
     def test_seconds_since_midnight(self):
         """
         Testing results of seconds_since_midnight function.
         """
-        result = utils.seconds_since_midnight(datetime.time(00, 00, 30))
-        self.assertEqual(result, 30)
-        result = utils.seconds_since_midnight(datetime.time(00, 10, 30))
-        self.assertEqual(result, 630)
-        result = utils.seconds_since_midnight(datetime.time(10, 10, 30))
-        self.assertEqual(result, 36630)
+        self.assertEqual(
+            utils.seconds_since_midnight(datetime.time(00, 00, 30)), 30
+        )
+        self.assertEqual(
+            utils.seconds_since_midnight(datetime.time(00, 10, 30)), 630
+        )
+        self.assertEqual(
+            utils.seconds_since_midnight(datetime.time(10, 10, 30)), 36630
+        )
 
     def test_interval(self):
         """
         Testing calculated time between end and start.
         """
-        result = utils.interval(
+        test_data = utils.interval(
             datetime.time(01, 00, 00), datetime.time(10, 00, 00)
         )
-        self.assertEqual(result, 32400)
-        result = utils.interval(
+        self.assertEqual(test_data, 32400)
+        test_data = utils.interval(
             datetime.time(01, 00, 00), datetime.time(17, 00, 00)
         )
-        self.assertEqual(result, 57600)
-        result = utils.interval(
+        self.assertEqual(test_data, 57600)
+        test_data = utils.interval(
             datetime.time(01, 05, 00), datetime.time(11, 10, 15)
         )
-        self.assertEqual(result, 36315)
+        self.assertEqual(test_data, 36315)
 
     def test_mean(self):
         """
@@ -320,11 +316,11 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         Testing returned presence starts, ends by weekday.
         """
         sample_data = utils.get_data()
-        days = utils.count_avg_group_by_weekday(
+        test_data = utils.count_avg_group_by_weekday(
             sample_data[10],
         )
         self.assertEqual(
-            days, {
+            test_data, {
                 0: {'start': [], 'end': []},
                 1: {'start': [34745], 'end': [64792]},
                 2: {'start': [33592], 'end': [58057]},
@@ -334,11 +330,11 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
                 6: {'start': [], 'end': []},
             }
         )
-        days = utils.count_avg_group_by_weekday(
+        test_data = utils.count_avg_group_by_weekday(
             sample_data[11],
         )
         self.assertAlmostEqual(
-            days, {
+            test_data, {
                 0: {'start': [33134], 'end': [57257]},
                 1: {'start': [33590], 'end': [50154]},
                 2: {'start': [33206], 'end': [58527]},

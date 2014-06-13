@@ -2,25 +2,22 @@
 """
 Helper functions used in views.
 """
-
 import csv
+import logging
+import urllib2
 import threading
 import time
-from json import dumps
-from functools import wraps
-from datetime import datetime
 
+from datetime import datetime
 from flask import Response
+from functools import wraps
+from json import dumps
+from lxml import etree
 
 from presence_analyzer.main import app
 
-import xml
-import urllib2
-from lxml import etree
 
-import logging
 log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
-
 CACHE = {}
 
 

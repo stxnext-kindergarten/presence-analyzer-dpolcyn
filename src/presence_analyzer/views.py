@@ -2,34 +2,25 @@
 """
 Defines views.
 """
-
 import calendar
-from flask import (
-    redirect,
-    make_response,
-)
+import locale
+import logging
+
+from flask import redirect, make_response
 from flask.ext.mako import render_template
 from mako.exceptions import TopLevelLookupException
-import locale
 
 from presence_analyzer.main import app
 from presence_analyzer.utils import (
-    jsonify,
-    get_data,
-    mean,
-    group_by_weekday,
     count_avg_group_by_weekday,
+    get_data,
     get_xml_data,
+    group_by_weekday,
+    jsonify,
+    mean,
 )
 
-import logging
 log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
-
-AVAILABLE_TEMPLATES = (
-    'presence_weekday',
-    'mean_time_weekdays',
-    'presence_start_end',
-)
 
 
 @app.route('/')
@@ -137,9 +128,6 @@ def templates_renderer(template_name):
     Render templates.
     """
     try:
-        if template_name in AVAILABLE_TEMPLATES:
-            return render_template(template_name + ".html")
-        else:
-            raise TopLevelLookupException
+        return render_template(template_name + ".html")
     except TopLevelLookupException:
         return make_response("page not found", 404)
