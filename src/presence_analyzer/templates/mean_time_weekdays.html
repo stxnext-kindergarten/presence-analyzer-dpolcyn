@@ -18,7 +18,7 @@
                         var dropdown = $("#user_id");
                         users = result;
                         $.each(result, function(item) {
-                            avatars[this[0]] = this[1].image
+                            avatars[this[0]] = this[1].image;
                             dropdown.append($("<option />").val(this[0]).text(this[1].name));
                         });
                         dropdown.show();
