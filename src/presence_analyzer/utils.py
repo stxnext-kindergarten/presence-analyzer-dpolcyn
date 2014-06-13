@@ -26,9 +26,9 @@ CACHE = {}
 
 def cache(key, duration):
     """
-        Cache function.
-        If called item in function, return item.
-        If not return item and add to cache.
+    Cache function.
+    If called item in function, return item.
+    If not return item and add to cache.
     """
     def _cache(function):
         def __cache(*args, **kwargs):
@@ -49,9 +49,9 @@ def cache(key, duration):
 
 def lock(function):
     """
-        Decorator. If thread is executing the function and another one
-        want to call the function, then second one will immediately
-        receive a return value.
+    Decorator. If thread is executing the function and another one
+    want to call the function, then second one will immediately
+    receive a return value.
     """
     function.locker = threading.Lock()
 
@@ -152,7 +152,6 @@ def count_avg_group_by_weekday(items):
     """
     Groups presence starts, ends by weekday.
     """
-
     result = {i: {'start': [], 'end': []} for i in range(7)}
     for date in items:
         start = items[date]['start']
