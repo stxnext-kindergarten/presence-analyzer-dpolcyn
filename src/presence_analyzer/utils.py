@@ -26,10 +26,10 @@ CACHE = {}
 
 def cache(key, duration):
     """
-Cache function.
-If called item in function, return item.
-If not return item and add to cache.
-"""
+    Cache function.
+    If called item in function, return item.
+    If not return item and add to cache.
+    """
     def _cache(function):
         def __cache(*args, **kwargs):
             if key in CACHE:
@@ -49,10 +49,10 @@ If not return item and add to cache.
 
 def lock(function):
     """
-Decorator. If thread is executing the function and another one
-want to call the function, then second one will immediately
-receive a return value.
-"""
+    Decorator. If thread is executing the function and another one
+    want to call the function, then second one will immediately
+    receive a return value.
+    """
     function.locker = threading.Lock()
 
     @wraps(function)
@@ -65,8 +65,8 @@ receive a return value.
 
 def jsonify(function):
     """
-Creates a response with the JSON representation of wrapped function result.
-"""
+    Creates a response with the JSON representation of wrapped function result.
+    """
     @wraps(function)
     def inner(*args, **kwargs):
         return Response(dumps(function(*args, **kwargs)),
@@ -143,8 +143,8 @@ def interval(start, end):
 
 def mean(items):
     """
-Calculates arithmetic mean. Returns zero for empty lists.
-"""
+    Calculates arithmetic mean. Returns zero for empty lists.
+    """
     return float(sum(items)) / len(items) if len(items) > 0 else 0
 
 
